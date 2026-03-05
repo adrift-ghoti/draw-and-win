@@ -200,10 +200,10 @@ class GameOverDialog:
 
         sorted_scores = sorted(scores, key=lambda x: -x[1])
         y = self.rect.y + 70
-        medals = ['🥇', '🥈', '🥉', '  ']
+        medals = ['第一名', '第二名', '第三名', '第四名']
         for i, (name, score) in enumerate(sorted_scores):
             medal = medals[min(i, 3)]
-            line  = self._font_md.render(f'{medal} {name}：{score} 點', True, WHITE)
+            line  = self._font_md.render(f'{medal}  {name}：{score} 點', True, WHITE)
             surface.blit(line, (self.rect.x + 50, y))
             y += 36
 
