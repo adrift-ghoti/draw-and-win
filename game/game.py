@@ -14,8 +14,12 @@ from __future__ import annotations
 from constants import (
     STARTING_SCORE, TSUMO_WIN_AMOUNT, RON_WIN_AMOUNT,
     AI_DRAW_DELAY, AI_DISCARD_DELAY, AI_RON_DELAY, RON_WINDOW_TIME,
-    SEAT_HUMAN,
+    SEAT_HUMAN, DISCARD_MAX_H, DISCARD_MAX_V,
 )
+
+# Per-seat history cap: horizontal seats (0, 2) vs vertical seats (1, 3)
+_DISCARD_CAP = {0: DISCARD_MAX_H, 1: DISCARD_MAX_V,
+                2: DISCARD_MAX_H, 3: DISCARD_MAX_V}
 from core.deck import Deck
 from core.card import Card
 from core.win_checker import check_win
@@ -356,7 +360,10 @@ class Game:
         self.deck.discard(card)
         self.last_discard        = card
         self.last_discard_player = player
-        self.discard_history[player.player_id].append(card)
+        hist = self.discard_history[player.player_id]
+        hist.append(card)
+        if len(hist) > _DISCARD_CAP[player.player_id]:
+            hist.pop(0)   # drop oldest; remaining cards shift left visually
         self._log(f'{player.name} 棄牌 {card}')
         self._set_state(GameState.DISCARDING)
 

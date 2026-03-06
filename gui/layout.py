@@ -10,6 +10,7 @@ Seat positions
 from constants import (
     CARD_W, CARD_H, WINDOW_WIDTH, WINDOW_HEIGHT,
     BTN_W, BTN_H, CENTER_X, CENTER_Y,
+    DISCARD_MAX_H, DISCARD_MAX_V,
 )
 
 # Deck position – centred on the table
@@ -17,17 +18,22 @@ DECK_X = CENTER_X - CARD_W // 2
 DECK_Y = CENTER_Y - CARD_H // 2
 
 # Per-seat discard history layout: (start_x, start_y, step_x, step_y, max_visible)
-# Cards are laid left-to-right (horizontal) or top-to-bottom (vertical)
-# in front of each player, between their hand and the centre of the table.
-#   Seat 0 (Human, bottom)  → horizontal row above the hand
-#   Seat 1 (AI Right)       → vertical column to the left of their cards
-#   Seat 2 (AI Top)         → horizontal row below their cards
-#   Seat 3 (AI Left)        → vertical column to the right of their cards
+# Cards overlap so the pile is compact; all seats use the same step.
+# Horizontal rows (seats 0, 2) and vertical columns (seats 1, 3) are
+# centred on the table such that a 4-card pile sits symmetrically.
+#
+# _D_STEP = 20 px exposed per card (overlap = CARD dimension - 20)
+# _HX / _VY  centre the pile around CENTER_X / CENTER_Y for 4 cards
+_D_STEP = 20
+_D_MAXH = DISCARD_MAX_H   # horizontal: up to 15 cards → 14*20+70=350 px
+_D_MAXV = DISCARD_MAX_V   # vertical:   up to 11 cards → 10*20+100=300 px (fits play area)
+_HX = CENTER_X - (3 * _D_STEP + CARD_W)  // 2   # 535
+_VY = CENTER_Y - (3 * _D_STEP + CARD_H)  // 2   # 320
 DISCARD_ROWS = {
-    0: (200,  535, CARD_W + 5, 0,          8),
-    1: (890,  190, 0,          CARD_H + 5, 4),
-    2: (200,  165, CARD_W + 5, 0,          8),
-    3: (215,  190, 0,          CARD_H + 5, 4),
+    0: (_HX,  535, _D_STEP, 0,       _D_MAXH),   # human: horizontal
+    1: (890,  _VY, 0,       _D_STEP, _D_MAXV),   # AI right: vertical
+    2: (_HX,  165, _D_STEP, 0,       _D_MAXH),   # AI top: horizontal
+    3: (215,  _VY, 0,       _D_STEP, _D_MAXV),   # AI left: vertical
 }
 
 # ------------------------------------------------------------------

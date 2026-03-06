@@ -72,6 +72,11 @@ BTN_H = 36
 # Tenpai indicator dot radius
 TENPAI_DOT_R = 7
 
+# Discard history max visible cards per seat orientation
+# Matches the DISCARD_ROWS max_visible values in gui/layout.py
+DISCARD_MAX_H = 15   # horizontal rows  (seats 0, 2)
+DISCARD_MAX_V = 11   # vertical columns (seats 1, 3)
+
 # Window centre (derived)
 CENTER_X = WINDOW_WIDTH  // 2
 CENTER_Y = WINDOW_HEIGHT // 2

@@ -277,13 +277,10 @@ class Renderer:
                 draw_card_face(surf, card, x, y,
                                font_md=self.font_md, font_sm=self.font_sm)
 
-                # Gold highlight: valid pickup card (last from 上家, human's turn)
-                is_valid = (seat == upjia and card_i == n - 1 and game.can_human_pick)
-                # First-click pending highlight
+                # Gold highlight on first-click pending only
                 target_key = f'discard_{seat}_{card_i}'
-                is_pending = (self._last_click_target == target_key
-                              and (now - self._last_click_ms) <= 400)
-                if is_valid or is_pending:
+                if (self._last_click_target == target_key
+                        and (now - self._last_click_ms) <= 400):
                     self._draw_highlight(surf, x, y)
 
     def _draw_human(self, surf: pygame.Surface, game) -> None:
@@ -510,12 +507,13 @@ class Renderer:
         # Deck
         if pygame.Rect(DECK_X, DECK_Y, CARD_W, CARD_H).collidepoint(pos):
             return 'deck'
-        # Discard history cards (all seats)
+        # Discard history cards (all seats) — iterate newest→oldest so topmost card wins
         for seat, (sx, sy, sdx, sdy, max_v) in DISCARD_ROWS.items():
             cards     = game.discard_history[seat]
             n         = len(cards)
             start_idx = max(0, n - max_v)
-            for disp_i, card_i in enumerate(range(start_idx, n)):
+            for card_i in range(n - 1, start_idx - 1, -1):
+                disp_i = card_i - start_idx
                 x = sx + disp_i * sdx
                 y = sy + disp_i * sdy
                 if pygame.Rect(x, y, CARD_W, CARD_H).collidepoint(pos):
