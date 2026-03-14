@@ -2,6 +2,9 @@ __pycache__/
 *.pyc
 *.pyo
 
+# Claude Code local settings
+.claude/settings.local.json
+
 # Pygbag build artifacts
 build/version.txt
 build/web/draw-and-win.apk
