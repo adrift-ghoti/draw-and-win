@@ -65,38 +65,7 @@ from gui.button import Button
 from gui.dialog import RonDialog, RoundEndDialog, GameOverDialog
 
 
-# ── Chinese font paths (direct file loading is more reliable than SysFont) ──
-_FONT_PATHS = [
-    'C:/Windows/Fonts/msjh.ttc',           # 微軟正黑體
-    'C:/Windows/Fonts/msyh.ttc',           # 微軟雅黑
-    'C:/Windows/Fonts/NotoSansTC-VF.ttf',  # Noto Sans TC
-    'C:/Windows/Fonts/kaiu.ttf',           # 標楷體
-    'C:/Windows/Fonts/mingliu.ttc',        # 細明體
-    'C:/Windows/Fonts/simsun.ttc',         # 宋體
-]
-
-_cached_font_path: str | None = None
-
-
-def _find_font_path() -> str | None:
-    global _cached_font_path
-    if _cached_font_path is not None:
-        return _cached_font_path
-    for path in _FONT_PATHS:
-        if os.path.exists(path):
-            _cached_font_path = path
-            return path
-    return None
-
-
-def _load_font(size: int) -> pygame.font.Font:
-    path = _find_font_path()
-    if path:
-        try:
-            return pygame.font.Font(path, size)
-        except Exception:
-            pass
-    return pygame.font.SysFont(None, size)
+from gui.font_loader import load_font as _load_font
 
 
 class Renderer:
@@ -458,7 +427,9 @@ class Renderer:
         # ── Game over ─────────────────────────────────────────────
         if state == GameState.GAME_OVER:
             if self._dlg_game_over.handle_event(event):
-                import sys; sys.exit(0)
+                import sys
+                if sys.platform != 'emscripten':
+                    sys.exit(0)
             return
 
         # ── 胡牌 button ───────────────────────────────────────────

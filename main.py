@@ -1,9 +1,5 @@
-"""
-自摸 – main entry point.
-
-Run with:  python main.py
-"""
-import sys
+"""Main entry point. Run with: python main.py"""
+import asyncio
 import pygame
 
 from constants import WINDOW_WIDTH, WINDOW_HEIGHT, FPS
@@ -12,11 +8,11 @@ from gui.renderer import Renderer
 from gui.menu import Menu
 
 
-def main() -> None:
+async def main() -> None:
     pygame.init()
 
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-    pygame.display.set_caption('自摸·釣寶')
+    pygame.display.set_caption('\u81ea\u6478\u00b7\u91e3\u5bf6')
 
     menu     = Menu(screen)
     renderer = Renderer(screen)
@@ -24,21 +20,22 @@ def main() -> None:
 
     game:      Game | None = None
     app_state: str         = 'menu'
+    running                = True
 
     clock = pygame.time.Clock()
 
-    while True:
+    while running:
         dt = clock.tick(FPS)
 
-        # ── Event handling ────────────────────────────────────────
+        # -- Event handling --
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit(0)
+                running = False
+                break
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                pygame.quit()
-                sys.exit(0)
+                running = False
+                break
 
             if app_state == 'menu':
                 result = menu.handle_event(event)
@@ -46,12 +43,15 @@ def main() -> None:
                     game      = Game()
                     app_state = 'game'
                 elif result == 'quit':
-                    pygame.quit()
-                    sys.exit(0)
+                    running = False
+                    break
             else:
                 renderer.handle_event_for_game(event, game)
 
-        # ── Update & render ───────────────────────────────────────
+        if not running:
+            break
+
+        # -- Update & render --
         if app_state == 'menu':
             menu.draw()
         else:
@@ -59,7 +59,10 @@ def main() -> None:
             renderer.draw(game)
 
         pygame.display.flip()
+        await asyncio.sleep(0)
+
+    pygame.quit()
 
 
 if __name__ == '__main__':
-    main()
+    asyncio.run(main())

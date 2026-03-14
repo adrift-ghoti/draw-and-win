@@ -17,25 +17,7 @@ from constants import (
 )
 from gui.button import Button
 
-# ── Font loading (same paths as renderer) ─────────────────────────────────
-_FONT_PATHS = [
-    'C:/Windows/Fonts/msjh.ttc',
-    'C:/Windows/Fonts/msyh.ttc',
-    'C:/Windows/Fonts/NotoSansTC-VF.ttf',
-    'C:/Windows/Fonts/kaiu.ttf',
-    'C:/Windows/Fonts/mingliu.ttc',
-    'C:/Windows/Fonts/simsun.ttc',
-]
-
-
-def _load_font(size: int) -> pygame.font.Font:
-    for path in _FONT_PATHS:
-        if os.path.exists(path):
-            try:
-                return pygame.font.Font(path, size)
-            except Exception:
-                pass
-    return pygame.font.SysFont(None, size)
+from gui.font_loader import load_font as _load_font
 
 
 # README path (project root = parent of gui/)
