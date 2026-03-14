@@ -358,7 +358,8 @@ class Renderer:
         anchor: str = 'left',
     ) -> None:
         color = GOLD if is_turn else WHITE
-        txt   = self.font_sm.render(name, True, color)
+        font  = self.font_md if is_turn else self.font_sm
+        txt   = font.render(name, True, color)
         if anchor == 'center':
             x -= txt.get_width() // 2
         elif anchor == 'right':
