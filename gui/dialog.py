@@ -240,7 +240,7 @@ class GameOverDialog:
 
         _quit_w = 120
         self.btn_quit = Button(cx - _quit_w // 2, self.rect.bottom - BTN_H - 14,
-                               _quit_w, BTN_H, '結束遊戲', style='ron', font=font_md)
+                               _quit_w, BTN_H, '\u56de\u4e3b\u9078\u55ae', style='skip', font=font_md)
 
     def draw(
         self,

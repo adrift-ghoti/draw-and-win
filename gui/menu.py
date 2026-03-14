@@ -12,7 +12,7 @@ import pygame
 from constants import (
     WINDOW_WIDTH, WINDOW_HEIGHT,
     TABLE_GREEN, TABLE_BORDER,
-    WHITE, GOLD, LIGHT_GRAY, DARK_GRAY,
+    WHITE, GOLD, DARK_GRAY,
     CENTER_X, CENTER_Y,
 )
 from gui.button import Button
@@ -42,9 +42,8 @@ class Menu:
         # ── Main menu buttons ──────────────────────────────────────
         bx = CENTER_X - _BTN_W // 2
         by = 330
-        self._btn_start = Button(bx, by,                          _BTN_W, _BTN_H, '開始遊戲', font=self._font_md)
-        self._btn_rules = Button(bx, by + (_BTN_H + _BTN_GAP),    _BTN_W, _BTN_H, '規則說明', font=self._font_md)
-        self._btn_quit  = Button(bx, by + (_BTN_H + _BTN_GAP) * 2, _BTN_W, _BTN_H, '結束遊戲', style='ron', font=self._font_md)
+        self._btn_start = Button(bx, by,                       _BTN_W, _BTN_H, '開始遊戲', font=self._font_md)
+        self._btn_rules = Button(bx, by + (_BTN_H + _BTN_GAP), _BTN_W, _BTN_H, '規則說明', font=self._font_md)
 
         # ── Rules page back button ─────────────────────────────────
         self._btn_back = Button(
@@ -92,7 +91,6 @@ class Menu:
 
         self._btn_start.draw(surf)
         self._btn_rules.draw(surf)
-        self._btn_quit.draw(surf)
 
     def _draw_rules(self, surf: pygame.Surface) -> None:
         # Page title
@@ -141,14 +139,12 @@ class Menu:
     # ------------------------------------------------------------------
 
     def handle_event(self, event: pygame.event.Event) -> str | None:
-        """Returns 'start', 'quit', or None."""
+        """Returns 'start' or None."""
         if self._page == 'main':
             if self._btn_start.handle_event(event):
                 return 'start'
             if self._btn_rules.handle_event(event):
                 self._page = 'rules'
-            if self._btn_quit.handle_event(event):
-                return 'quit'
         else:
             if self._btn_back.handle_event(event):
                 self._page = 'main'

@@ -402,8 +402,9 @@ class Renderer:
     # Event forwarding helpers (called by main.py)
     # ------------------------------------------------------------------
 
-    def handle_event_for_game(self, event: pygame.event.Event, game) -> None:
-        """Translate button clicks and card clicks into game actions."""
+    def handle_event_for_game(self, event: pygame.event.Event, game) -> str | None:
+        """Translate button clicks and card clicks into game actions.
+        Returns 'menu' when the player requests to return to the main menu."""
         state = game.state
 
         # ── RON window ────────────────────────────────────────────
@@ -427,9 +428,7 @@ class Renderer:
         # ── Game over ─────────────────────────────────────────────
         if state == GameState.GAME_OVER:
             if self._dlg_game_over.handle_event(event):
-                import sys
-                if sys.platform != 'emscripten':
-                    sys.exit(0)
+                return 'menu'
             return
 
         # ── 胡牌 button ───────────────────────────────────────────

@@ -1,5 +1,7 @@
 """Main entry point. Run with: python main.py"""
 import asyncio
+import random
+import time
 import pygame
 
 from constants import WINDOW_WIDTH, WINDOW_HEIGHT, FPS
@@ -9,6 +11,8 @@ from gui.menu import Menu
 
 
 async def main() -> None:
+    random.seed(time.time_ns())
+
     pygame.init()
 
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -42,11 +46,11 @@ async def main() -> None:
                 if result == 'start':
                     game      = Game()
                     app_state = 'game'
-                elif result == 'quit':
-                    running = False
-                    break
             else:
-                renderer.handle_event_for_game(event, game)
+                action = renderer.handle_event_for_game(event, game)
+                if action == 'menu':
+                    game      = None
+                    app_state = 'menu'
 
         if not running:
             break
