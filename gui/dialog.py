@@ -277,8 +277,8 @@ class QuitConfirmDialog:
         w, h = 400, 170
         self.rect = pygame.Rect(cx - w // 2, cy - h // 2, w, h)
         btn_y = self.rect.bottom - BTN_H - 14
-        self.btn_yes = Button(cx - BTN_W - 15, btn_y, BTN_W, BTN_H, '是，離開', style='ron',  font=font_md)
-        self.btn_no  = Button(cx + 15,          btn_y, BTN_W, BTN_H, '否，繼續', style='skip', font=font_md)
+        self.btn_yes = Button(cx - BTN_W - 15, btn_y, BTN_W, BTN_H, '是', style='ron',  font=font_md)
+        self.btn_no  = Button(cx + 15,          btn_y, BTN_W, BTN_H, '否', style='skip', font=font_md)
 
     def draw(self, surface: pygame.Surface) -> None:
         _panel(surface, self.rect)
