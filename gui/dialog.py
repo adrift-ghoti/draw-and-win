@@ -266,3 +266,30 @@ class GameOverDialog:
 
     def handle_event(self, event) -> bool:
         return self.btn_quit.handle_event(event)
+
+
+class QuitConfirmDialog:
+    """確認是否離開遊戲的對話框。"""
+
+    def __init__(self, font_lg, font_md) -> None:
+        self._font_lg = font_lg
+        cx, cy = CENTER_X, CENTER_Y
+        w, h = 400, 170
+        self.rect = pygame.Rect(cx - w // 2, cy - h // 2, w, h)
+        btn_y = self.rect.bottom - BTN_H - 14
+        self.btn_yes = Button(cx - BTN_W - 15, btn_y, BTN_W, BTN_H, '是，離開', style='ron',  font=font_md)
+        self.btn_no  = Button(cx + 15,          btn_y, BTN_W, BTN_H, '否，繼續', style='skip', font=font_md)
+
+    def draw(self, surface: pygame.Surface) -> None:
+        _panel(surface, self.rect)
+        title = self._font_lg.render('確定要離開遊戲？', True, WHITE)
+        tx = self.rect.x + (self.rect.w - title.get_width()) // 2
+        surface.blit(title, (tx, self.rect.y + 22))
+        self.btn_yes.draw(surface)
+        self.btn_no.draw(surface)
+
+    def handle_event(self, event) -> str | None:
+        """Returns 'yes', 'no', or None."""
+        if self.btn_yes.handle_event(event): return 'yes'
+        if self.btn_no.handle_event(event):  return 'no'
+        return None

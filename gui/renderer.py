@@ -61,7 +61,7 @@ _LOG_SUIT_MAP = {
 }
 
 from gui.button import Button
-from gui.dialog import RonDialog, RoundEndDialog, GameOverDialog
+from gui.dialog import RonDialog, RoundEndDialog, GameOverDialog, QuitConfirmDialog
 
 
 from gui.font_loader import load_font as _load_font
@@ -79,7 +79,12 @@ class Renderer:
         self.font_xsm: pygame.font.Font | None = None
 
         # Buttons
-        self._btn_win: Button | None = None
+        self._btn_win:  Button | None = None
+        self._btn_back: Button | None = None
+
+        # Quit confirm dialog
+        self._dlg_quit_confirm:  QuitConfirmDialog | None = None
+        self._show_quit_confirm: bool = False
 
         # Double-click tracking
         self._last_click_ms:     int = 0
@@ -109,9 +114,13 @@ class Renderer:
         self._font_md_bold = _load_font(FONT_MD)
         self._font_md_bold.bold = True
 
-        self._dlg_ron       = RonDialog(self.font_lg, self.font_md, self.font_sm)
-        self._dlg_round_end = RoundEndDialog(self.font_lg, self.font_md, self.font_sm)
-        self._dlg_game_over = GameOverDialog(self.font_lg, self.font_md)
+        _BACK_BTN_W, _BACK_BTN_H = 130, 38
+        self._btn_back = Button(20, 118, _BACK_BTN_W, _BACK_BTN_H, '返回選單', font=self.font_sm)
+
+        self._dlg_ron          = RonDialog(self.font_lg, self.font_md, self.font_sm)
+        self._dlg_round_end    = RoundEndDialog(self.font_lg, self.font_md, self.font_sm)
+        self._dlg_game_over    = GameOverDialog(self.font_lg, self.font_md)
+        self._dlg_quit_confirm = QuitConfirmDialog(self.font_lg, self.font_md)
 
         self._fonts_ready = True
 
@@ -177,6 +186,8 @@ class Renderer:
         # ── Buttons (bottom) ───────────────────────────────────────
         if game.state not in (GameState.RON_WINDOW, GameState.ROUND_END, GameState.GAME_OVER):
             self._btn_win.draw(surf)
+            if not self._show_quit_confirm:
+                self._btn_back.draw(surf)
 
         # ── Round label ────────────────────────────────────────────
         rl = self.font_sm.render(f'第 {game.round_number} 局', True, LIGHT_GRAY)
@@ -203,6 +214,9 @@ class Renderer:
         elif game.state == GameState.GAME_OVER:
             scores = [(p.name, p.score) for p in game.players]
             self._dlg_game_over.draw(surf, scores)
+
+        if self._show_quit_confirm:
+            self._dlg_quit_confirm.draw(surf)
 
     # ------------------------------------------------------------------
     # Sub-drawers
@@ -408,6 +422,16 @@ class Renderer:
     def handle_event_for_game(self, event: pygame.event.Event, game) -> str | None:
         """Translate button clicks and card clicks into game actions.
         Returns 'menu' when the player requests to return to the main menu."""
+        # ── Quit confirm dialog（最高優先）─────────────────────────
+        if self._show_quit_confirm:
+            action = self._dlg_quit_confirm.handle_event(event)
+            if action == 'yes':
+                self._show_quit_confirm = False
+                return 'menu'
+            elif action == 'no':
+                self._show_quit_confirm = False
+            return
+
         state = game.state
 
         # ── RON window ────────────────────────────────────────────
@@ -437,6 +461,11 @@ class Renderer:
         # ── 胡牌 button ───────────────────────────────────────────
         if self._btn_win.handle_event(event):
             game.human_declare_tsumo()
+            return
+
+        # ── 返回選單按鈕 ─────────────────────────────────────────
+        if self._btn_back.handle_event(event):
+            self._show_quit_confirm = True
             return
 
         # ── Double-click interactions ──────────────────────────────
