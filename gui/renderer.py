@@ -115,7 +115,7 @@ class Renderer:
         self._font_md_bold.bold = True
 
         _BACK_BTN_W, _BACK_BTN_H = 110, 34
-        self._btn_back = Button(10, 8, _BACK_BTN_W, _BACK_BTN_H, '返回選單', font=self.font_sm)
+        self._btn_back = Button(10, 30, _BACK_BTN_W, _BACK_BTN_H, '返回選單', font=self.font_sm)
 
         self._dlg_ron          = RonDialog(self.font_lg, self.font_md, self.font_sm)
         self._dlg_round_end    = RoundEndDialog(self.font_lg, self.font_md, self.font_sm)
@@ -189,9 +189,9 @@ class Renderer:
             if not self._show_quit_confirm:
                 self._btn_back.draw(surf)
 
-        # ── Round label (top-centre) ────────────────────────────────
+        # ── Round label (top-left) ──────────────────────────────────
         rl = self.font_sm.render(f'第 {game.round_number} 局', True, LIGHT_GRAY)
-        surf.blit(rl, (CENTER_X - rl.get_width() // 2, 2))
+        surf.blit(rl, (10, 8))
 
         # ── 釣寶 indicator (left of 自摸 button) ───────────────────
         if game.human.is_diaobao:

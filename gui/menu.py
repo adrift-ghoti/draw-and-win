@@ -205,7 +205,7 @@ class Menu:
         # Human (bottom) — 4 card faces horizontal
         h_y = _IY1 - ch - 20
         human_cards = [Card(Suit.SPADES, 3), Card(Suit.CLUBS, 7),
-                       Card(Suit.SPADES, 10), Card(Suit.CLUBS, 2)]
+                       Card(Suit.HEARTS, 9), Card(Suit.CLUBS, 2)]
         for i, card in enumerate(human_cards):
             self._scaled_card_face(surf, card, x0_h + i * (cw + cg), h_y, cw, ch)
         lbl = self._font_xs.render('你', True, GOLD)
@@ -242,8 +242,8 @@ class Menu:
             Card(Suit.SPADES,  2),
             Card(Suit.CLUBS,   3),
             Card(Suit.CLUBS,   4),
-            Card(Suit.SPADES, 10),
-            Card(Suit.CLUBS,  10),
+            Card(Suit.SPADES, 9),
+            Card(Suit.CLUBS,  9),
         ]
         gap = 10
         total_w = 5 * CARD_W + 4 * gap
@@ -283,7 +283,7 @@ class Menu:
 
         # ── Deck (center-top) ──────────────────────────────────────────────
         deck_x = _ICX - cw // 2
-        deck_y = _ICY - 80
+        deck_y = _ICY - 100
         # Shadow
         self._scaled_card_back(surf, deck_x - 3, deck_y - 3, cw, ch)
         # Gold highlight (clickable hint)
@@ -299,8 +299,8 @@ class Menu:
                               deck_y + ch + 14))
 
         # ── Human hand (bottom) ────────────────────────────────────────────
-        hand_cards = [Card(Suit.SPADES, 3), Card(Suit.CLUBS, 7),
-                      Card(Suit.SPADES, 10), Card(Suit.CLUBS, 2),
+        hand_cards = [Card(Suit.SPADES, 3), Card(Suit.HEARTS, 7),
+                      Card(Suit.SPADES, 9), Card(Suit.CLUBS, 2),
                       Card(Suit.SPADES, 5)]
         turn_lbl = self._font_xs.render('▲ 你的回合', True, GOLD)
         surf.blit(turn_lbl, (_ICX - turn_lbl.get_width() // 2,
