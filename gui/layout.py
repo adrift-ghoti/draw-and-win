@@ -102,9 +102,9 @@ AI3_LABEL_Y  = AI3_CARD_Y0 + 4 * AI3_CARD_GAP + CARD_W + 8
 INFO_X = WINDOW_WIDTH - 180
 INFO_Y = 20
 
-# Score panel  (bottom-left)
-SCORE_X = 20
-SCORE_Y = 20
+# Score panel  (top-right)
+SCORE_X = WINDOW_WIDTH - 185   # = 1015
+SCORE_Y = 10
 SCORE_LINE_H = 22
 
 # Log panel  (bottom-left, beside human cards)

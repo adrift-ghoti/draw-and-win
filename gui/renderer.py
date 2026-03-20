@@ -22,7 +22,7 @@ from constants import (
     TENPAI_DOT_R,
 )
 from game.game_state import GameState
-from constants import CENTER_Y
+from constants import CENTER_X, CENTER_Y
 
 # States where all hands are revealed
 _REVEAL_STATES = frozenset({
@@ -114,8 +114,8 @@ class Renderer:
         self._font_md_bold = _load_font(FONT_MD)
         self._font_md_bold.bold = True
 
-        _BACK_BTN_W, _BACK_BTN_H = 130, 38
-        self._btn_back = Button(20, 118, _BACK_BTN_W, _BACK_BTN_H, '返回選單', font=self.font_sm)
+        _BACK_BTN_W, _BACK_BTN_H = 110, 34
+        self._btn_back = Button(10, 8, _BACK_BTN_W, _BACK_BTN_H, '返回選單', font=self.font_sm)
 
         self._dlg_ron          = RonDialog(self.font_lg, self.font_md, self.font_sm)
         self._dlg_round_end    = RoundEndDialog(self.font_lg, self.font_md, self.font_sm)
@@ -189,9 +189,9 @@ class Renderer:
             if not self._show_quit_confirm:
                 self._btn_back.draw(surf)
 
-        # ── Round label ────────────────────────────────────────────
+        # ── Round label (top-centre) ────────────────────────────────
         rl = self.font_sm.render(f'第 {game.round_number} 局', True, LIGHT_GRAY)
-        surf.blit(rl, (WINDOW_WIDTH - rl.get_width() - 10, 8))
+        surf.blit(rl, (CENTER_X - rl.get_width() // 2, 2))
 
         # ── 釣寶 indicator (left of 自摸 button) ───────────────────
         if game.human.is_diaobao:
