@@ -21,7 +21,7 @@ import tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SOURCE_FONT = 'Iansui-Regular-full.ttf'   # 完整字型（不 commit）
+SOURCE_FONT = os.path.join(os.path.dirname(ROOT), 'Iansui-Regular-full.ttf')  # 完整字型（專案外，不 commit）
 OUTPUT_FONT = 'Iansui-Regular.ttf'         # subset 輸出（commit）
 
 SCAN_DIRS = [
@@ -70,7 +70,7 @@ def collect_chars() -> set[int]:
 
 
 def main():
-    source_path = os.path.join(ROOT, SOURCE_FONT)
+    source_path = SOURCE_FONT if os.path.isabs(SOURCE_FONT) else os.path.join(ROOT, SOURCE_FONT)
     output_path = os.path.join(ROOT, OUTPUT_FONT)
     if os.path.exists(source_path):
         font_path = source_path
